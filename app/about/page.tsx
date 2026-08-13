@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import AboutInvoiceButton from "./AboutInvoiceButton";
 
 export const metadata: Metadata = {
   title: "About Project High-Lvl — Our Story, Mission, and Founders",
@@ -129,7 +130,7 @@ export default function AboutPage() {
       <footer>
         <div className="footer-mark"><img src="/logo.png" alt="" /><span>PROJECT<br />HIGH-LVL</span></div>
         <p>The future should be something our communities help build.</p>
-        <div className="footer-links"><Link href="/">Home</Link><Link href="/#work">Programs</Link><Link href="/#impact">Impact</Link><Link href="/#join">Get involved</Link><a href="mailto:phlnonprofit@gmail.com">Contact</a></div>
+        <div className="footer-links"><Link href="/">Home</Link><Link href="/#work">Programs</Link><Link href="/#impact">Impact</Link><Link href="/#join">Get involved</Link><a href="mailto:phlnonprofit@gmail.com">Contact</a><AboutInvoiceButton /></div>
         <div className="footer-bottom"><span>© {new Date().getFullYear()} Project High-Lvl</span><span>501(c)(3) · EIN 33-2614564 · Los Angeles, CA</span></div>
       </footer>
     </div>

@@ -38,6 +38,15 @@ test("server-renders the founders and purpose on the dedicated About page", asyn
   assert.match(html, /Mission/);
   assert.match(html, /Vision/);
   assert.match(html, /Access is the opening/);
+  assert.match(html, /Invoice/);
+});
+
+test("server-renders the private contribution receipt tool gate", async () => {
+  const response = await render("/about/receipt");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Contribution receipt access/);
+  assert.match(html, /PRIVATE PROJECT HIGH-LVL TOOL/);
 });
 
 test("server-renders the post-donation page", async () => {
