@@ -9,6 +9,6 @@
    - **Execute as:** Me
    - **Who has access:** Anyone
 7. Click **Deploy**, authorize if prompted, and copy the Web app URL ending in `/exec`.
-8. Paste that URL between the quotes in `PARTNER_FORM_URL` near the top of `app/page.tsx`, then rebuild and republish the website.
+8. Paste that URL between the quotes in `PARTNER_FORM_URL` near the top of `app/page.tsx`, then rebuild and republish the website. The current deployment is already connected there.
 
-The form will append `Your Name`, `Email`, `City`, `I want to`, and `Timestamp` to the existing spreadsheet. It also emails a notification to `phlnonprofit@gmail.com`. Until the `/exec` URL is added to the website, the form falls back to a pre-addressed email.
+The form will append `Your Name`, `Email`, `City`, `I want to`, and `Timestamp` to the existing spreadsheet. It also emails a notification to `phlnonprofit@gmail.com`. If the `/exec` URL is ever removed from the website, the form falls back to a pre-addressed email.

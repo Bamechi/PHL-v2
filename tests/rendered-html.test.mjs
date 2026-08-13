@@ -25,7 +25,7 @@ test("server-renders the Project High-Lvl homepage", async () => {
   assert.match(html, /33-2614564/);
   assert.match(html, /High Lvl Lab/);
   assert.match(html, /phlnonprofit@gmail\.com/);
-  assert.match(html, /Support the mission/);
+  assert.match(html, /Name your contribution/);
   assert.doesNotMatch(html, /partnerships@projecthighlvl\.org|Reporting begins with our first published cohort|articles-of-incorporation|conflict-of-interest-policy|bylaws|codex-preview|react-loading-skeleton|#DONATE_LINK/i);
 });
 
@@ -70,6 +70,7 @@ test("ships the required brand, social, and photo assets plus the partner form s
   assert.doesNotMatch(page + layout + packageJson, /_sites-preview|react-loading-skeleton|codex-preview/);
   assert.match(layout, /og\.png/);
   assert.match(page, /data-reveal/);
+  assert.match(page, /AKfycbz__QqtcSPHK4sUX_mDnqtxKphXPUmH9-xzpBljJk9UwX24S_419NwyZH1qD9RIb1SxuA/);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(script, /1SUHqRUlgOdX5-TvpmfcqQAOPOry5K1PE97eSJqB3Ypg/);
   assert.match(script, /phlnonprofit@gmail\.com/);

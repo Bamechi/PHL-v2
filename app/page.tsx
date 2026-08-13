@@ -10,9 +10,7 @@ const STRIPE = {
   workshop: "https://buy.stripe.com/28E8wPdxicdZ8CB9AM1Nu01",
 };
 
-// Paste the deployed Apps Script web-app URL here after completing google-apps-script/SETUP.md.
-// Until then, the form gracefully falls back to a pre-addressed email.
-const PARTNER_FORM_URL = "";
+const PARTNER_FORM_URL = "https://script.google.com/macros/s/AKfycbz__QqtcSPHK4sUX_mDnqtxKphXPUmH9-xzpBljJk9UwX24S_419NwyZH1qD9RIb1SxuA/exec";
 
 const chapters = ["Ascent", "Gap", "Work", "Blueprint", "Proof", "Support", "House"];
 
@@ -226,7 +224,7 @@ export default function Home() {
             <h1>Rise above<br />the <em>gap.</em></h1>
             <p className="hero-lede">AI literacy is the new financial literacy. Project High-Lvl puts the tools, teaching, and room within reach.</p>
             <div className="hero-actions">
-              <a className="button button-gold" href={STRIPE.custom} target="_blank" rel="noreferrer">Support the mission — give $50 <Arrow /></a>
+              <a className="button button-gold" href={STRIPE.custom} target="_blank" rel="noreferrer">Name your contribution <Arrow /></a>
               <a className="text-link light" href="#join">Get a free seat <Arrow /></a>
             </div>
             <p className="hero-trust">501(c)(3) · EIN 33-2614564 · Contributions tax-deductible</p>
@@ -319,7 +317,7 @@ export default function Home() {
           </div>
           <div className="give-grid" data-reveal>
             <a className="give-card featured" href={STRIPE.custom} target="_blank" rel="noreferrer">
-              <span className="give-kicker">Start here</span><b>$50</b><strong>Open access</strong><small>Help someone attend and power the program around them</small><Arrow />
+              <span className="give-kicker">Flexible support</span><b>Any $</b><strong>Name your contribution</strong><small>Give what feels right—every amount supports the mission</small><Arrow />
             </a>
             <a className="give-card" href={STRIPE.fiveSeats} target="_blank" rel="noreferrer">
               <span className="give-kicker">Build momentum</span><b>$250</b><strong>Support program delivery</strong><small>Flexible mission support</small><Arrow />
@@ -395,7 +393,7 @@ export default function Home() {
       </footer>
 
       <div className="mobile-give" aria-label="Quick actions">
-        <a href={STRIPE.custom} target="_blank" rel="noreferrer">$50 · Support PHL</a>
+        <a href={STRIPE.custom} target="_blank" rel="noreferrer">Give · Your amount</a>
         <a href="#join">Get a free seat</a>
       </div>
     </>
