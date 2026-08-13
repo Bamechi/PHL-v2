@@ -16,6 +16,7 @@ npm run dev
 ```bash
 npm test
 npm run lint
+npm run typecheck
 ```
 
 `npm test` creates the production build and verifies the rendered homepage, thank-you route, and required assets.
@@ -26,5 +27,6 @@ npm run lint
 - Primary page copy and giving destinations live in `app/page.tsx`.
 - Brand photography lives under `public/`.
 - The paste-ready partner intake backend and deployment instructions live in `google-apps-script/`.
+- `npm run build` creates the Cloudflare/Vinext build used by Sites. Vercel uses the separate standard Next.js build declared in `vercel.json`.
 
 Metrics without verified data intentionally render as an em dash beside a description of what each report will include.
