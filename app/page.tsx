@@ -10,7 +10,34 @@ const STRIPE = {
   workshop: "https://buy.stripe.com/28E8wPdxicdZ8CB9AM1Nu01",
 };
 
-const chapters = ["Ascent", "Gap", "Work", "Blueprint", "Proof", "Seat", "House"];
+// Paste the deployed Apps Script web-app URL here after completing google-apps-script/SETUP.md.
+// Until then, the form gracefully falls back to a pre-addressed email.
+const PARTNER_FORM_URL = "";
+
+const chapters = ["Ascent", "Gap", "Work", "Blueprint", "Proof", "Support", "House"];
+
+const impactMetrics = [
+  {
+    label: "Access funded",
+    value: stats.seatsFunded,
+    description: "Tracks support directed toward participant access and free or affordable program delivery.",
+  },
+  {
+    label: "People reached",
+    value: stats.peopleServed,
+    description: "Counts unique participants served across learning, mentorship, and wellness experiences.",
+  },
+  {
+    label: "Participant builds",
+    value: stats.buildsShipped,
+    description: "Records practical projects completed during AI and digital-literacy programming.",
+  },
+  {
+    label: "Communities engaged",
+    value: stats.citiesReached,
+    description: "Shows the cities and communities where Project High-Lvl programs are delivered.",
+  },
+];
 
 const programs = [
   {
@@ -51,6 +78,7 @@ export default function Home() {
   const [activeLevel, setActiveLevel] = useState(0);
   const [progress, setProgress] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [formState, setFormState] = useState<"idle" | "submitting" | "submitted" | "error">("idle");
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -123,16 +151,35 @@ export default function Home() {
     };
   }, []);
 
-  function handleLead(event: FormEvent<HTMLFormElement>) {
+  async function handleLead(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const name = String(form.get("name") || "");
     const email = String(form.get("email") || "");
     const city = String(form.get("city") || "");
     const segment = String(form.get("segment") || "Participant");
+    const website = String(form.get("website") || "");
     const subject = `Project High-Lvl — ${segment} inquiry from ${name}`;
     const body = `Name: ${name}\nEmail: ${email}\nCity: ${city}\nPath: ${segment}\n\nI would like to take the next step with Project High-Lvl.`;
-    window.location.href = `mailto:partnerships@projecthighlvl.org?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    if (!PARTNER_FORM_URL) {
+      window.location.href = `mailto:phlnonprofit@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      return;
+    }
+
+    setFormState("submitting");
+    try {
+      await fetch(PARTNER_FORM_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ name, email, city, segment, website }),
+      });
+      setFormState("submitted");
+      event.currentTarget.reset();
+    } catch {
+      setFormState("error");
+    }
   }
 
   return (
@@ -153,10 +200,10 @@ export default function Home() {
         <nav className={menuOpen ? "main-nav is-open" : "main-nav"} aria-label="Primary navigation">
           <a href="#work" onClick={() => setMenuOpen(false)}>The work</a>
           <a href="#impact" onClick={() => setMenuOpen(false)}>Impact</a>
-          <a href="#house" onClick={() => setMenuOpen(false)}>Governance</a>
+          <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
           <a href="#join" onClick={() => setMenuOpen(false)}>Get involved</a>
-          <a className="nav-partner" href="mailto:partnerships@projecthighlvl.org?subject=Project%20High-Lvl%20Partnership">Partner</a>
-          <a className="nav-give" href={STRIPE.custom} target="_blank" rel="noreferrer">Fund a seat</a>
+          <a className="nav-partner" href="mailto:phlnonprofit@gmail.com?subject=Project%20High-Lvl%20Partnership">Partner</a>
+          <a className="nav-give" href={STRIPE.custom} target="_blank" rel="noreferrer">Support PHL</a>
         </nav>
       </header>
 
@@ -173,13 +220,13 @@ export default function Home() {
         <section className="hero" id="top" data-level="0">
           <div className="hero-backdrop" aria-hidden="true" />
           <div className="hero-shade" aria-hidden="true" />
-          <div className="hero-photo" aria-hidden="true"><img src="/photos/founder.jpg" alt="" /></div>
+          <div className="hero-light" aria-hidden="true" />
           <div className="hero-copy">
-            <p className="eyebrow hero-eyebrow">A 501(c)(3) nonprofit · Founded by 19Keys · Los Angeles</p>
+            <p className="eyebrow hero-eyebrow">A 501(c)(3) nonprofit · Los Angeles</p>
             <h1>Rise above<br />the <em>gap.</em></h1>
             <p className="hero-lede">AI literacy is the new financial literacy. Project High-Lvl puts the tools, teaching, and room within reach.</p>
             <div className="hero-actions">
-              <a className="button button-gold" href={STRIPE.custom} target="_blank" rel="noreferrer">Sponsor a seat — set $50 <Arrow /></a>
+              <a className="button button-gold" href={STRIPE.custom} target="_blank" rel="noreferrer">Support the mission — give $50 <Arrow /></a>
               <a className="text-link light" href="#join">Get a free seat <Arrow /></a>
             </div>
             <p className="hero-trust">501(c)(3) · EIN 33-2614564 · Contributions tax-deductible</p>
@@ -232,12 +279,12 @@ export default function Home() {
             <h2>Partner-funded.<br /><em>Community-owned.</em></h2>
             <p className="blueprint-lede">Access is what we offer partners. Ability is what we give away.</p>
             <ol className="steps">
-              <li><span>01</span><p>Partners fund free seats for students and community.</p></li>
+              <li><span>01</span><p>Partners fund free and affordable programs for students and community.</p></li>
               <li><span>02</span><p>We teach practical AI, digital, and money skills.</p></li>
               <li><span>03</span><p>Participants build, apply, and show what changed.</p></li>
               <li><span>04</span><p>Proof attracts stronger partners — and the cycle climbs.</p></li>
             </ol>
-            <a className="button button-outline-light" href="mailto:partnerships@projecthighlvl.org?subject=Project%20High-Lvl%20Partner%20Brief">Request the partner brief <Arrow /></a>
+            <a className="button button-outline-light" href="mailto:phlnonprofit@gmail.com?subject=Project%20High-Lvl%20Partner%20Brief">Request the partner brief <Arrow /></a>
           </div>
         </section>
 
@@ -249,16 +296,11 @@ export default function Home() {
             <p>Our first public impact report will count the same measures every year — whether they flatter us or not.</p>
           </div>
           <div className="proof-ledger" data-reveal>
-            {[
-              ["Seats funded", stats.seatsFunded],
-              ["People served", stats.peopleServed],
-              ["Builds shipped", stats.buildsShipped],
-              ["Cities reached", stats.citiesReached],
-            ].map(([label, value]) => (
-              <div className="metric" key={label as string}>
+            {impactMetrics.map(({ label, value, description }) => (
+              <div className="metric" key={label}>
                 <b>{value ?? "—"}</b>
                 <span>{label}</span>
-                <small>{value == null ? "Reporting begins with our first published cohort." : "Verified program data."}</small>
+                <small>{description}</small>
               </div>
             ))}
           </div>
@@ -271,27 +313,27 @@ export default function Home() {
         <section className="chapter seat" id="lvl-5" data-level="5">
           <div className="chapter-number" aria-hidden="true">05</div>
           <div className="seat-copy" data-reveal>
-            <p className="eyebrow">LVL 05 — THE SEAT</p>
+            <p className="eyebrow">LVL 05 — THE SUPPORT</p>
             <h2><span>$50</span> puts one person in the room.</h2>
-            <p>Every gift expands free access to AI and financial-literacy experiences. Choose a level; the door opens in a secure Stripe checkout.</p>
+            <p>It also helps us pay for the people, planning, spaces, technology, and program delivery that keep Project High-Lvl free or affordable for the communities at the center of our mission.</p>
           </div>
           <div className="give-grid" data-reveal>
             <a className="give-card featured" href={STRIPE.custom} target="_blank" rel="noreferrer">
-              <span className="give-kicker">Start here</span><b>$50</b><strong>Fund one seat</strong><small>Choose $50 in checkout</small><Arrow />
+              <span className="give-kicker">Start here</span><b>$50</b><strong>Open access</strong><small>Help someone attend and power the program around them</small><Arrow />
             </a>
             <a className="give-card" href={STRIPE.fiveSeats} target="_blank" rel="noreferrer">
-              <span className="give-kicker">Five seats</span><b>$250</b><strong>Bring a small circle</strong><small>One-time contribution</small><Arrow />
+              <span className="give-kicker">Build momentum</span><b>$250</b><strong>Support program delivery</strong><small>Flexible mission support</small><Arrow />
             </a>
             <a className="give-card" href={STRIPE.classroom} target="_blank" rel="noreferrer">
-              <span className="give-kicker">The classroom</span><b>$1K</b><strong>Fund twenty seats</strong><small>One-time contribution</small><Arrow />
+              <span className="give-kicker">Back the work</span><b>$1K</b><strong>Expand reach and resources</strong><small>Program and operating support</small><Arrow />
             </a>
             <a className="give-card" href={STRIPE.workshop} target="_blank" rel="noreferrer">
-              <span className="give-kicker">The workshop</span><b>$10K</b><strong>Underwrite the room</strong><small>Company partnership</small><Arrow />
+              <span className="give-kicker">Underwrite impact</span><b>$10K</b><strong>Strengthen a full program</strong><small>Major mission support</small><Arrow />
             </a>
           </div>
           <div className="seat-note" data-reveal>
             <p>Want to build recurring impact?</p>
-            <a href="mailto:partnerships@projecthighlvl.org?subject=Project%20High-Lvl%20Monthly%20Giving">Start a monthly commitment <Arrow /></a>
+            <a href="mailto:phlnonprofit@gmail.com?subject=Project%20High-Lvl%20Monthly%20Giving">Start a monthly commitment <Arrow /></a>
           </div>
           <p className="legal-line">Project High-Lvl is a 501(c)(3) nonprofit (EIN 33-2614564). Contributions are tax-deductible to the extent allowed by law.</p>
         </section>
@@ -303,6 +345,7 @@ export default function Home() {
             <h2>Learn. Mentor.<br />Partner. Build.</h2>
             <p>Tell us how you want to enter and where you are. We&apos;ll route you to the right next step.</p>
             <form onSubmit={handleLead}>
+              <label className="intake-trap" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
               <label>Your name<input required name="name" autoComplete="name" /></label>
               <label>Email<input required name="email" type="email" autoComplete="email" /></label>
               <label>City<input required name="city" autoComplete="address-level2" /></label>
@@ -311,9 +354,13 @@ export default function Home() {
                   <option>Participant</option><option>Mentor</option><option>Sponsor</option><option>Partner</option>
                 </select>
               </label>
-              <button className="button button-green" type="submit">Take the next step <Arrow /></button>
+              <button className="button button-green" type="submit" disabled={formState === "submitting"}>{formState === "submitting" ? "Sending…" : "Take the next step"} <Arrow /></button>
             </form>
-            <small>Submitting opens a pre-addressed email with your details. You stay in control of sending it.</small>
+            <small aria-live="polite">
+              {formState === "submitted" && "Thank you — your information has been received."}
+              {formState === "error" && "We could not send that form. Please email phlnonprofit@gmail.com."}
+              {formState === "idle" && (PARTNER_FORM_URL ? "Your information goes directly to the Project High-Lvl team." : "Submitting opens a pre-addressed email with your details.")}
+            </small>
           </div>
         </section>
 
@@ -330,12 +377,7 @@ export default function Home() {
             <div><span>EIN</span><b>33-2614564</b></div>
             <div><span>Exemption effective</span><b>December 15, 2024</b></div>
             <div><span>Location</span><b>1360 S Figueroa St, Ste D119, Los Angeles, CA 90015</b></div>
-            <div><span>Contact</span><a href="mailto:partnerships@projecthighlvl.org">partnerships@projecthighlvl.org</a></div>
-          </div>
-          <div className="document-links" data-reveal>
-            <a href="/docs/articles-of-incorporation.pdf" target="_blank">Articles of Incorporation <Arrow /></a>
-            <a href="/docs/bylaws.pdf" target="_blank">Bylaws <Arrow /></a>
-            <a href="/docs/conflict-of-interest-policy.pdf" target="_blank">Conflict of Interest Policy <Arrow /></a>
+            <div><span>Contact</span><a href="mailto:phlnonprofit@gmail.com">phlnonprofit@gmail.com</a></div>
           </div>
         </section>
       </main>
@@ -344,7 +386,7 @@ export default function Home() {
         <div className="footer-mark"><img src="/logo.png" alt="" /><span>PROJECT<br />HIGH-LVL</span></div>
         <p>AI literacy is the new financial literacy.</p>
         <div className="footer-links">
-          <a href="#work">Programs</a><a href="#impact">Impact</a><a href="#house">Governance</a><a href="#join">Get involved</a><a href={STRIPE.custom} target="_blank" rel="noreferrer">Give</a>
+          <a href="#work">Programs</a><a href="#impact">Impact</a><a href="/about">About</a><a href="#join">Get involved</a><a href={STRIPE.custom} target="_blank" rel="noreferrer">Give</a>
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Project High-Lvl</span>
@@ -353,7 +395,7 @@ export default function Home() {
       </footer>
 
       <div className="mobile-give" aria-label="Quick actions">
-        <a href={STRIPE.custom} target="_blank" rel="noreferrer">$50 · Fund a seat</a>
+        <a href={STRIPE.custom} target="_blank" rel="noreferrer">$50 · Support PHL</a>
         <a href="#join">Get a free seat</a>
       </div>
     </>

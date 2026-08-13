@@ -22,7 +22,10 @@ const organizationSchema = {
   url: "https://projecthighlvl.org",
   logo: "https://projecthighlvl.org/logo.png",
   taxID: "33-2614564",
-  founder: { "@type": "Person", name: "19Keys" },
+  founder: [
+    { "@type": "Person", name: "19Keys" },
+    { "@type": "Person", name: "B. Amechi" },
+  ],
   address: {
     "@type": "PostalAddress",
     streetAddress: "1360 S Figueroa St, Ste D119",
@@ -31,7 +34,7 @@ const organizationSchema = {
     postalCode: "90015",
     addressCountry: "US",
   },
-  email: "partnerships@projecthighlvl.org",
+  email: "phlnonprofit@gmail.com",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
